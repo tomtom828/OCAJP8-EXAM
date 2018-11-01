@@ -1,5 +1,7 @@
 Compilation (from `/Chap05`):
+
 `javac -d bin -cp original original/Sunlight.java`
+
 `javac -d bin -cp solved solved/Sunlight.java`
 
 Run Original:
