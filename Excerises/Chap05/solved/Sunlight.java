@@ -10,9 +10,9 @@ public class Sunlight {
     int lightSpeed = 299_792_458; // meters per second
 
     // Convert distance to meters.
-    long mFromSun = (long) kmFromSun * 1000; // need to cast to long since it was otherwise int * int
+    long mFromSun = (long) kmFromSun * 1000; // need to cast to long since it was otherwise: int * int = int
 
-    int seconds = (int) (mFromSun / lightSpeed); // need to cast back to int since it was otherwise long * int
+    int seconds = (int) (mFromSun / lightSpeed); // need to cast back to int since it was otherwise: long * int = long
 
     System.out.print("Light will use ");
     printTime(seconds);
