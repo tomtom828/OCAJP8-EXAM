@@ -78,6 +78,11 @@ public class FilterFun {
   public static void applyAllPredicatesAlt(List<String> list,            // (4)
                                            List<Predicate<String>> predicates) {
     /* IMPLEMENT THIS METHOD */
+    Predicate<String> otherPred = s -> true; // TT - uses and() use because
+    for (Predicate<String> predicate : predicates)
+      otherPred = otherPred.and(predicate);
+    list.removeIf(otherPred.negate()); // TT - remove entry if it does not match criteria
+    System.out.println(list);
   }
 
   /** Generic version.
@@ -91,5 +96,10 @@ public class FilterFun {
   public static <T> void applyAllPredicatesGenAlt(List<T> list,          // (5)
                                  List<Predicate<T>> predicates) {
     /* IMPLEMENT THIS METHOD */
+    Predicate<T> otherPred = s -> true; // TT - uses and() use because
+    for (Predicate<T> predicate : predicates)
+      otherPred = otherPred.and(predicate);
+    list.removeIf(otherPred.negate()); // TT - remove entry if it does not match criteria
+    System.out.println(list);
   }
 }
