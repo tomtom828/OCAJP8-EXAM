@@ -26,6 +26,7 @@ public class Astronaut {
   /** @return LocalDate The actual date of return. */
   public LocalDate getActualReturnDate() {
     /* IMPLEMENT THIS METHOD. */
+    return this.arrivalDateTime.toLocalDate().plus(this.actualPeriodOfStay);
   }
 
   /**
@@ -35,11 +36,18 @@ public class Astronaut {
    */
   public String getReturnStatus() {
     /* IMPLEMENT THIS METHOD. */
+    if (this.getActualReturnDate().isBefore(this.scheduledReturnDate))
+      return "Early";
+    else if (this.getActualReturnDate().isAfter(this.scheduledReturnDate))
+      return "Delayed";
+    else 
+      return "On time";
   }
 
   /** @return Period The planned stay according to the scheduled return.*/
   public Period getPlannedPeriodOfStay() {
     /* IMPLEMENT THIS METHOD. */
+    return Period.between(this.arrivalDateTime.toLocalDate(), this.scheduledReturnDate);
   }
 
   /**
@@ -47,5 +55,7 @@ public class Astronaut {
    *                the scheduled return date. */
   public Period getDiffPeriodOfStay() {
     /* IMPLEMENT THIS METHOD. */
+    return Period.between(this.scheduledReturnDate, this.getActualReturnDate());
   }
+
 }

@@ -37,4 +37,21 @@ public class SpaceStationStats {
                        + " Act.Return  Status Act.Stay Sched.Stay Diff");
     String reportFormatStr = "%-16s%10s%12s%12s%8s%6s%10s%9s%n";
     /* IMPLEMENT THE REST OF THE METHOD. */
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    for (Astronaut astronaut : astronauts) {
+
+      String astronautName = astronaut.getAstronautName();
+      LocalDateTime arrivalDate = astronaut.getArrivalDateTime();
+      LocalDate scheduledReturnDate = astronaut.getScheduledReturnDate();
+      LocalDate actualReturnDate = astronaut.getActualReturnDate();
+      String status = astronaut.getReturnStatus();
+      Period periodOfStay = astronaut.getActualPeriodOfStay();
+      Period plannedPeriodOfStay = astronaut.getPlannedPeriodOfStay();
+      Period diffPeriodOfStay = astronaut.getDiffPeriodOfStay();
+
+      System.out.printf(reportFormatStr, astronautName, arrivalDate.format(df), scheduledReturnDate.format(df), 
+        actualReturnDate.format(df), status, periodOfStay, plannedPeriodOfStay, diffPeriodOfStay);
+
+    }
+  }
 }
