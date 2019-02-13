@@ -1,5 +1,5 @@
 ## Things to Keep in Mind:
-* Primative Data Types:
+#### Primative Data Types:
   - Sizes of whole numbers:
     - byte = 8 bits = -128 to 127 ... suffix: none
     - short = 16 bits ... suffix: none
@@ -29,25 +29,25 @@
   - `int` can NOT be assigned to `byte` without explicit casting (unless, of course, u write it like this `byte b = 127` AND the number is small enough to be a byte... ex `byte b = 300` is NOT ok, this give compilation error)
   - `int` can NOT be assigned to `short` without explicit casting (unless, of course, u write it like  `short s = 32767` )
 
-* Flow Control:
+#### Flow Control:
 - Don't forget about Short circuiting of `&&` and `||` ... the `&` and `|` do NOT short circuit
 - Always double check `switch` case values... Trick questions like  `int score = 60;switch (score); case score < 70:`. This is NOT ok b/c score is `int` but score < 70 is  `boolean`
 
 
-* Strings:
+#### Strings:
 - `substring(int beginIndex, int endIndex)` is used to extract the substring. The substring begins at "beginIndex" and extends to "endIndex - 1". 
 - The `.toString` method works the same in String and Stringbuilder (shows the string, not the class@hashcode)
 - StringBuilder class does NOT override `equals(Object)` method!!!
 - Don't forget that Strings are immutable... common issue: `str1.trim();` will not change str1, need to do `str1 = str1.trim();`
 
 
-* Arrays:
+#### Arrays:
 - Both are valid: `int[] myArr` or `int myArr[]` for an int array
 - Warning: This is NOT valid... `double[] arr = new int[2];` ... `int[]` and `double[]` are NOT analagous to `int` and `double`
 - outermost array length is `arr.length`, then get inner arrays with `arr[x].length`
 
 
-* ArrayLists / Iterator:
+#### ArrayLists / Iterator:
 -  If you want to remove the items from an ArrayList, while using Iterator or ListIterator, then use `Iterator.remove()` or method and NOT `ArrayList.remove()` method
 - The method for `.addAll(1, list2);` inserts all values in list2 at index 1... doesn't delete anything... just slides over values.
 - `List` is an interface so its instance can't be created using new keyword.
@@ -56,7 +56,7 @@
 - `.remove(Object obj)` method returns boolean result but `.remove(int index)` returns the removed item from the list
 
 
-* OOP:
+#### OOP:
 - a Subtype can't refer to an object of Supertype, i.e. `(SubType) SuperTypeInstance()`; will throw ClassCastException.
 - Possible to have abstract class without any abstract method
 - Java compiler adds `super();` as the first statement inside a constructor if  acall to another constructor using this(...) or super(...) is not available.
@@ -70,7 +70,7 @@
 - A constructor should have `super()` or `this()`  but not both
 
 
-* Exceptions:
+#### Exceptions:
 - Checked Excpetions (i.e. anything that `throws` an Exception) requires a try / catch block
 - The `try` block is only enough if the class it's inside of also `throws` the same checked exception, otherwise we, must have a `catch` for the specific checked exception
 - There is no `ArrayIndexException`, that is FAKE... The correct one is `IndexOutOfBoundsException`
@@ -78,18 +78,18 @@
 - Something like `catch(FileNotFoundException | IOException e)` is NOT ok if the 2 exceptions are sub / superclasses (as is the case in this example)
 - If a super class / interface method `throws` a checked exception, then the overriding method of sub class can NOT declare to throw the super class of the exception thrown by super class / interface 
 
-* Garbage Collector:
+#### Garbage Collector:
   - You can NOT "force" the JVM to run the Garbage Collector
   - But can "request" it to MAYBE get called using either: `System.gc();` or `Runtime.getRuntime().gc();`
 
 
-* Lamdba Functions
+#### Lamdba Functions
 - If using blocks (i.e. `{}`) then must have a `return` statement.
 - Method to call on predicate function is `.test()`
 - Be careful with `Predicate` vs `Predicate<String>` (or other types), the generic `Predicate` will assume type is `Object` so methods like `.length()` or `.size()` may not be useable
 
 
-* Time/Date:
+#### Time/Date:
 - The `.of()` must have a valid date or time, otherwise it gets an expection... Ex `LocalDate.of(2020, 2, 30)` will fail but if we had `add()` that got to that point, it would round down.
 - Using `date.atTime(LocalTime)` method creates a LocalDateTime instance by combining date + time parts
 - The `Period.of(0, 0, 0);` is same as `Period.ZERO`, it shows up as `P0D` (and NOT `P0Y0M0D`)
@@ -109,7 +109,7 @@
 - Methods like `getMonth()` (singular) relate to LocalDate or LocalDateTime and `getMonths()` (plural) is for a `Period`
 
 
-* Misc:
+#### Misc:
 - A `static {}` block fires off before `public static void main(String[] args){}`
 - As long as the others are not directly accessible by JVM, you can have more than 1 `main()` method (i.e. can't have 2+ public `main()` methods in 2 `public` classes)
 - You can run a `public static void main()` method from a public or package-private class.
