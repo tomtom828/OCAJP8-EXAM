@@ -29,6 +29,7 @@
   - `int` can NOT be assigned to `byte` without explicit casting (unless, of course, u write it like this `byte b = 127` AND the number is small enough to be a byte... ex `byte b = 300` is NOT ok, this give compilation error)
   - `int` can NOT be assigned to `short` without explicit casting (unless, of course, u write it like  `short s = 32767` )
 
+
 #### Flow Control:
 - Don't forget about Short circuiting of `&&` and `||` ... the `&` and `|` do NOT short circuit
 - Always double check `switch` case values... Trick questions like  `int score = 60;switch (score); case score < 70:`. This is NOT ok b/c score is `int` but score < 70 is  `boolean`
@@ -68,6 +69,12 @@
 - Class declared as `final` can't be inherited. Examples are: String, Integer, System etc. Ex class `MyString extends String` is not OK since String is final
 - Without `class Vehicle extends Car`, we will get a compilation error for `Vehicle obj = new Car();` ... and not an expection like classCastExpection
 - A constructor should have `super()` or `this()`  but not both
+
+### Field Accessibilty Modifiers
+- `private` - can only be accessed within the declared class itself.
+- `package-private` (i.e. nothing written) - available to any other class in the same package. Is NOT available to another class outside the package, not even if it the other class extends the class with the `package-private` field.
+- `protected` - can be accessed only by the subclasses in other package or any class within the package of the protected members' class.
+- `public` - can be accessed from any other classes (assuming their packages are imported).
 
 
 #### Exceptions:
