@@ -1,20 +1,21 @@
 ## Things to Keep in Mind:
 #### Primative Data Types:
   - Sizes of whole numbers:
-    - byte = 8 bits = -128 to 127 ... suffix: none
-    - short = 16 bits ... suffix: none
-    - int = 32 bits = -2,147,483,648 to 2,147,483,647 ... suffix: none
-    - long = 64 bits ... suffix: `L` or `l` (ex 10_000_000_000L is fine)
-
+    - `byte` = 8 bits = -128 to 127 ... suffix: none
+    - `short` = 16 bits ... suffix: none
+    - `int` = 32 bits = -2,147,483,648 to 2,147,483,647 ... suffix: none
+    - `long` = 64 bits ... suffix: `L` or `l` (ex 10_000_000_000L is fine)
+    - NOTE: a `char` is also 16 bits.
   - Sizes of decimals:
     - float = 32 bits ... suffix `f` or `F`
     - double = 64 bits = approx ±1.79769313486231570E+308 ... suffix `d` or `D`
-
   - Note that `Char` can store integers, ex. `int i = 5` or `char c = '5'` are valid (but different numbers)
 * Default Initialization:
   - byte: 0, short: 0, int: 0, long: 0L, float: 0.0f, double: 0.0, boolean: false, char: \u0000 
   - When printed on the console: byte, short, int & long prints 0, float & double print 0.0
 * Object versions of primatives:
+  - All the wrapper objects are immutable. So, `obj++` means `obj = new Integer( obj.intValue()  + 1);`
+  - Wrapper classes do NOT have no-args constructors
   - `Integer()` and `Double()` are siblings (both extends from Number class) so they can NOT be casted to each other
   - When declaring `Boolean()`, the values are not case-sensitive ... `Boolean("TrUE")` is OK
   - For the `Boolean()`, passing in `Boolean("true")` (or any case-insenstive "tRUE") gives `true`, otherwise you get `false`, so `Boolean("Ham Sandwich")` is `false`
@@ -28,16 +29,29 @@
   - `double` can NOT be assigned to `float` without explicit casting
   - `int` can NOT be assigned to `byte` without explicit casting (unless, of course, u write it like this `byte b = 127` AND the number is small enough to be a byte... ex `byte b = 300` is NOT ok, this give compilation error)
   - `int` can NOT be assigned to `short` without explicit casting (unless, of course, u write it like  `short s = 32767` )
+* Decimal v. Binary v. Octal v. Hexa
+  - These can be `int` or `long` values
+  - Binary start with `0b`. Example, `0b1010` is 10 decimal value (1*2^3 + 0*2^2 + 1*2^1 + ...)
+  - Octal starts with `0`. Example, `012` is 10 decimal value (1*8^1 + 2*8^0)
+  - Hexadecimal starts with `0x`. Example, `0xa` is 10 decimal value (highest letter is F/f, can be CAPS or lowercase)
+* Error vs. Infinity
+  - Float division will give +/- Infinity (only if you divide by `0.0`)
+  - Int division will give `ArithmeticException`  (i.e. if you divide by `0`)
 
 
 #### Flow Control:
 - Don't forget about Short circuiting of `&&` and `||` ... the `&` and `|` do NOT short circuit
 - Always double check `switch` case values... Trick questions like  `int score = 60;switch (score); case score < 70:`. This is NOT ok b/c score is `int` but score < 70 is  `boolean`
+- The `switch` condition can NOT be `boolean`, `long`, or `double` or `float`
+- The `switch` condition CAN be `String`, `char`, `int`, `short`, `byte`, the respective wrapper classes, or `enum` 
+- The `switch` requires a constant condition (ex. `case args[0]` is not ok since it can change)
+- The `break` statement breaks out of the closest LOOP/SWITCH (or ANY labeled STATEMENT within the scope)
+- The `continue` statement basically jumps to the bottom of the LOOP, starting with the next iteration (or continues to labeled LOOP)
 
 
 #### Strings:
 - `substring(int beginIndex, int endIndex)` is used to extract the substring. The substring begins at "beginIndex" and extends to "endIndex - 1". 
-- The `.toString` method works the same in String and Stringbuilder (shows the string, not the class@hashcode)
+- Yes, the `.toString` method works the same in `String` and `Stringbuilder` (shows the string, not the class@hashcode)
 - StringBuilder class does NOT override `equals(Object)` method!!!
 - Don't forget that Strings are immutable... common issue: `str1.trim();` will not change str1, need to do `str1 = str1.trim();`
 
@@ -46,6 +60,9 @@
 - Both are valid: `int[] myArr` or `int myArr[]` for an int array
 - Warning: This is NOT valid... `double[] arr = new int[2];` ... `int[]` and `double[]` are NOT analagous to `int` and `double`
 - outermost array length is `arr.length`, then get inner arrays with `arr[x].length`
+- It IS ok to have a trailing comma in an array declaration: `int[] arr = {1,2,3,};` is valid!!!
+- Expression `int arr[], i` gives 1 array of ints and 1 int.
+- Use `.sort()` method on an array instance to sort by values (ex. `intArray.sort()` sorts ASC, i.e. 1,2,5,7,..)
 
 
 #### ArrayLists / Iterator:
@@ -55,9 +72,13 @@
 - Arraylist has `.remove(Object o)` (removes the first occurrence of obj) or `.remove(int i)` (removes by position)
 - Using `.remove( new CustomObject("blah") )` might remove anything if the `.equals()` methods are not overridden, since hashcode of new object won't match those in the list
 - `.remove(Object obj)` method returns boolean result but `.remove(int index)` returns the removed item from the list
+- The `.subList(x,y)` works like the `.subString(x,y)`, the y is exclusive (i.e. range is x to y-1)
+- Yes, the `.add()` returns a boolean value if the list is altered
 
 
 #### OOP:
+- Methods are called based on the instance, ex. `A o1 = new C(); o1.method();` will call the method on the C class
+- Fields are called based on the class type, ex. `A o1 = new C(); o1.field;` will access the field on the A class
 - a Subtype can't refer to an object of Supertype, i.e. `(SubType) SuperTypeInstance()`; will throw ClassCastException.
 - Possible to have abstract class without any abstract method
 - Java compiler adds `super();` as the first statement inside a constructor if  acall to another constructor using this(...) or super(...) is not available.
@@ -65,25 +86,58 @@
 - Yes, you can put access modifiers in front of constructors (yes, even `private` )
 - TO call another constructor from within a constructor, you MUST use `this()`, you can NOT explicitly call `ObjectConstructorName()`!!!
 - Automatic boxing of 10.0 can occur in `add(Double d1, Double d2)` for `add(10.0, new Double())`
-- Yes, you can call on `super.methodName()` within child object
+- Yes, you CAN call on `super.methodName()` within child object
 - Class declared as `final` can't be inherited. Examples are: String, Integer, System etc. Ex class `MyString extends String` is not OK since String is final
 - Without `class Vehicle extends Car`, we will get a compilation error for `Vehicle obj = new Car();` ... and not an expection like classCastExpection
 - A constructor should have `super()` or `this()`  but not both
 
-### Field Accessibilty Modifiers
-- `private` - can only be accessed within the declared class itself.
+
+
+#### Interfaces:
+- Any field in an interface is implicitly `public`, `static`, and `final`, whether these keywords are specified or not.
+
+
+
+#### Methods/Fields
+- Only 1 Variable Arity (`vararg...`) is allowed per parameter list, and it must be the LAST parameter in the method.
+- Vararg `...` must be attached to type, not the variable name. Ex `String... args` is OK and `String args...` is not.
+- Methods must have different signatures (i.e. input types) to be overloaded, the same inputs and a different output are not OK.
+- Parameters in a method CAN be `final`, just don't change their value within the method call
+- If no args are given, the `main()` methods gets an array of size 0 (and not `null`)
+- To `@Override` a method, the parameters must be the same and in the same order, AND the return type must be the same (or a subtype of the original, i.e. covariant)
+
+
+#### Memeber Accessibilty Modifiers
+- `private` - can only be accessed within the declared class itself. They are NOT inheritied by the subclass.
 - `package-private` (i.e. nothing written) - available to any other class in the same package. Is NOT available to another class outside the package, not even if it the other class extends the class with the `package-private` field.
 - `protected` - can be accessed only by the subclasses in other package or any class within the package of the protected members' class.
 - `public` - can be accessed from any other classes (assuming their packages are imported).
 
 
+#### Memeber Non-Accessibilty Modifiers
+These specify certain aspects that are not related to accessibity.
+- `static` fields only exist for the class for which they are defined, but they can be called by an instance of the class
+- `static` methods only exist for the class and can only be called by the class (i.e NOT by an object)
+- `final` fields cannot have their value change. For primitives, they are a constant. For reference values, the object itself can change but the reference to that object cannot change.
+- `final` methods cannot be overridden by a subclass
+- `abstract` methods do not have an implementation. The subclass must implement the method. They look like: `abstract myMethod();`. They can NOT be static or final.
+- `sychronized` methods mean that only 1 thread can execute that at a time.
+- `native` methods are those whose implementation is NOT in Java.
+
+
 #### Exceptions:
-- Checked Excpetions (i.e. anything that `throws` an Exception) requires a try / catch block
-- The `try` block is only enough if the class it's inside of also `throws` the same checked exception, otherwise we, must have a `catch` for the specific checked exception
+- All errors and exceptions are derived from the `Throwable` CLASS!
+- Check exceptions are those which are not Error or RunTimeException (or their subclasses)
+- Anything that explicitly `throws` an Exception requires a try / catch block
+- The `try` block is only enough if the class it's inside of also `throws` the same checked exception (or its superclass), otherwise we, must have a `catch` for the specific checked exception
 - There is no `ArrayIndexException`, that is FAKE... The correct one is `IndexOutOfBoundsException`
 - Exceptions in `catch` blocks need to be handled in order... ex. `catch(FileNotFoundException){}` needs to come before `catch(IOException){}` since it extends the IOExpection
+- All the `catch(){}` must come before the `finally{}`
 - Something like `catch(FileNotFoundException | IOException e)` is NOT ok if the 2 exceptions are sub / superclasses (as is the case in this example)
 - If a super class / interface method `throws` a checked exception, then the overriding method of sub class can NOT declare to throw the super class of the exception thrown by super class / interface 
+- Yes, `main()` methods is allowed to `throws Exception` (or any other expection, ex. IOException)
+- The `IOException` must be imported from `java.io.*;`
+
 
 #### Garbage Collector:
   - You can NOT "force" the JVM to run the Garbage Collector
@@ -126,3 +180,9 @@
 - Note that `.length()` is NOT valid for arrays lengths, use `.length` for Arrays
 - Note that `.length` is NOT valid for String lengths, use `.length()` for Strings
 - Use `.size()` (and NOT `.length()`) for ArrayLists 
+- Variable names cannot start with a number, ex. `48chevy` is not allowed... But you CAN start with `$` or `_`
+- Only underscore and currecny symbols are allowed in variable names, other special character like `@` are not allowed
+- Comments within comments may not work... Examlple, `/* /* */ */` is NOT valid... The second `*/` is not matched up b/c the second `/*` is commented out.
+- Be sure to use `import static` for static fields, ex. `import static java.lang.Math.PI;`
+- For classpatch (`-cp`), you can use the `:` as a seperator, ex. `.:pkg` means `.` or `pkg` directories
+- Enhanced for loop (`:`) cannot iterate over a Map (Map does not implement `Iterable` interface)
