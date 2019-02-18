@@ -31,8 +31,8 @@
   - `int` can NOT be assigned to `short` without explicit casting (unless, of course, u write it like  `short s = 32767` )
 * Decimal v. Binary v. Octal v. Hexa
   - These can be `int` or `long` values
-  - Binary start with `0b`. Example, `0b1010` is 10 decimal value (1*2^3 + 0*2^2 + 1*2^1 + ...)
-  - Octal starts with `0`. Example, `012` is 10 decimal value (1*8^1 + 2*8^0)
+  - Binary start with `0b`. Example, `0b1010` is 10 decimal value (1x2^3 + 0x2^2 + 1x2^1 + ...)
+  - Octal starts with `0`. Example, `012` is 10 decimal value (1x8^1 + 2x8^0)
   - Hexadecimal starts with `0x`. Example, `0xa` is 10 decimal value (highest letter is F/f, can be CAPS or lowercase)
 * Error vs. Infinity
   - Float division will give +/- Infinity (only if you divide by `0.0`)
