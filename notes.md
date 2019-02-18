@@ -21,7 +21,7 @@
   - For the `Boolean()`, passing in `Boolean("true")` (or any case-insenstive "tRUE") gives `true`, otherwise you get `false`, so `Boolean("Ham Sandwich")` is `false`
   - Define new `Integer()` as `1` or `"1"`
   - `Integer() == Integer()` is NOT same as `Integer().equals()` ... same rules as Strings, use `.equals` to compare by value and `==` to check if it's the same object
-  - BUT WAIT... Don't forget that weird work issue where if the int is < 127, then `new Integer(127) == new Integer(127)` (same for < -128) ... but then `new Integer(128) != new Integer(128)`
+  - BUT WAIT... Don't forget that weird work issue where if the int is < 127, then `new Integer(127) == new Integer(127)` (same for > -128) ... but then `new Integer(128) != new Integer(128)`
   - `Double()` can take in a number like `10.0` or `10` or a String like `"10"` or even a char (since that can be converted to `int` value... ex. `'a'` = `97`)
 * Review rules on casting between different numbers
   - `float` can NOT be assigned to `int` without explicit casting
