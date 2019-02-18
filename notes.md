@@ -19,6 +19,7 @@
   - `Integer()` and `Double()` are siblings (both extends from Number class) so they can NOT be casted to each other
   - When declaring `Boolean()`, the values are not case-sensitive ... `Boolean("TrUE")` is OK
   - For the `Boolean()`, passing in `Boolean("true")` (or any case-insenstive "tRUE") gives `true`, otherwise you get `false`, so `Boolean("Ham Sandwich")` is `false`
+  - The default values in this arr are null, not false `Boolean[] arr = new Boolean[1];` (they are object references)
   - Define new `Integer()` as `1` or `"1"`
   - `Integer() == Integer()` is NOT same as `Integer().equals()` ... same rules as Strings, use `.equals` to compare by value and `==` to check if it's the same object
   - BUT WAIT... Don't forget that weird work issue where if the int is < 127, then `new Integer(127) == new Integer(127)` (same for > -128) ... but then `new Integer(128) != new Integer(128)`
@@ -51,12 +52,15 @@
 
 #### Strings:
 - `substring(int beginIndex, int endIndex)` is used to extract the substring. The substring begins at "beginIndex" and extends to "endIndex - 1". 
+- `substring(int beginIndex)` is from the start position all the way to the last position
 - Yes, the `.toString` method works the same in `String` and `Stringbuilder` (shows the string, not the class@hashcode)
 - StringBuilder class does NOT override `equals(Object)` method!!!
 - Don't forget that Strings are immutable... common issue: `str1.trim();` will not change str1, need to do `str1 = str1.trim();`
+- StringBuilder and String are both `final` classes
 
 
 #### Arrays:
+- Yes, arrays DO extend from `Object` ... BUT `int[]` and other primitive arrays do NOT extend `Object[]`
 - Both are valid: `int[] myArr` or `int myArr[]` for an int array
 - Warning: This is NOT valid... `double[] arr = new int[2];` ... `int[]` and `double[]` are NOT analagous to `int` and `double`
 - outermost array length is `arr.length`, then get inner arrays with `arr[x].length`
@@ -70,10 +74,12 @@
 - The method for `.addAll(1, list2);` inserts all values in list2 at index 1... doesn't delete anything... just slides over values.
 - `List` is an interface so its instance can't be created using new keyword.
 - Arraylist has `.remove(Object o)` (removes the first occurrence of obj) or `.remove(int i)` (removes by position)
-- Using `.remove( new CustomObject("blah") )` might remove anything if the `.equals()` methods are not overridden, since hashcode of new object won't match those in the list
-- `.remove(Object obj)` method returns boolean result but `.remove(int index)` returns the removed item from the list
+- Using `.remove( new CustomObject("blah") )` may not remove anything if the `.equals()` methods are not overridden, since hashcode of new object won't match those in the list
+- `.remove(Object obj)` method returns `boolean` result but `.remove(int index)` returns the removed item from the list (ex an int or String)
+- Note that the `.set(int pos, Object obj)` returns the value of whatever was replaced (its likely NOT a boolean)
 - The `.subList(x,y)` works like the `.subString(x,y)`, the y is exclusive (i.e. range is x to y-1)
 - Yes, the `.add()` returns a boolean value if the list is altered
+- Modifying the arrayList within enhanced loop (i.e. `:`) will give `java.util.ConcurrentModificationException`
 
 
 #### OOP:
@@ -90,15 +96,25 @@
 - Class declared as `final` can't be inherited. Examples are: String, Integer, System etc. Ex class `MyString extends String` is not OK since String is final
 - Without `class Vehicle extends Car`, we will get a compilation error for `Vehicle obj = new Car();` ... and not an expection like classCastExpection
 - A constructor should have `super()` or `this()`  but not both
+- Same as interfaces, inherited methods / fields cannot have their accessibility narrowed.
 
 
 
 #### Interfaces:
-- Any field in an interface is implicitly `public`, `static`, and `final`, whether these keywords are specified or not.
-
+- Yes interfaces do extend from `Object` class
+- Any field in an interface is `public`, `static`, and `final`, whether these keywords are specified or not.
+- All methods and fields in an interface must be `public`.
+- A method in an interface can be either `abstract`, `default`, or `static`.
+- Note that `static` methods belong to the interface class and can NOT be overridden
+- An `default` method cannot be `abstract` or `static` since it has no definition and must be defined outside the interface
+- A `default` method provides a default implementation, which can be overridden by a class that implements the interface
+- An `abstract` method has no implemenation (ex. `void doSomething();`)
+- Yes, interfaces can have `static` methods. BUT they cannot be inherited. This means that they can only be called using the full qualified name (ex. `MyInterface.myStaticMethod()` and NOT called from the object that implements it
+- You can NOT narrow accesibility of interface methods, by default `void yo();` is public in an interface, therefore in the class implementation, it must be `public`
 
 
 #### Methods/Fields
+- Be careful not to confuse Override with Overload!!!
 - Only 1 Variable Arity (`vararg...`) is allowed per parameter list, and it must be the LAST parameter in the method.
 - Vararg `...` must be attached to type, not the variable name. Ex `String... args` is OK and `String args...` is not.
 - Methods must have different signatures (i.e. input types) to be overloaded, the same inputs and a different output are not OK.
@@ -151,6 +167,10 @@ These specify certain aspects that are not related to accessibity.
 
 
 #### Time/Date:
+- Do NOT forget that LocalDate, LocalTime, LocalDateTime are immutable!
+  - Using `date.plusDays(-1);` will NOT alter the `date`. You need to do `date = date.plusDays(-1);`
+- Do NOT forget that these are also STATIC FACTORIES, and not object instances. must use `.of()` or `.parse()`
+- Always, always, always make sure you're not cross contaminating TIME stuff with LocalDate and DATE stuff with LocalTime
 - The `.of()` must have a valid date or time, otherwise it gets an expection... Ex `LocalDate.of(2020, 2, 30)` will fail but if we had `add()` that got to that point, it would round down.
 - Using `date.atTime(LocalTime)` method creates a LocalDateTime instance by combining date + time parts
 - The `Period.of(0, 0, 0);` is same as `Period.ZERO`, it shows up as `P0D` (and NOT `P0Y0M0D`)
@@ -168,6 +188,11 @@ These specify certain aspects that are not related to accessibity.
   - `dd` is day of month
   - `yy` is year (2 digit) and `yyyy` is year (4 digit). Note that `uu` and `uuuu` also work.
 - Methods like `getMonth()` (singular) relate to LocalDate or LocalDateTime and `getMonths()` (plural) is for a `Period`
+- Printing the `LocalDate` will be in format `yyyy-MM-dd`
+- The LocalTime has `LocalTime.of(int hour, int minute, int second, int nanoOfSecond)` as most params and `LocalTime.of(int hour, int minute)` as least params
+- The LocalTime prints as `23:01:15` or `HH:mm:ss` format
+- Note that `11:01:15 pm` is `.format(DateTimeFormatter.ofPattern("HH:mm:ss a")` or `("hh:mm:ss a")` pattern
+- Use `"hh:mm:ss.SSS"` for milliseconds (max of 9 S's)
 
 
 #### Misc:
@@ -186,3 +211,6 @@ These specify certain aspects that are not related to accessibity.
 - Be sure to use `import static` for static fields, ex. `import static java.lang.Math.PI;`
 - For classpatch (`-cp`), you can use the `:` as a seperator, ex. `.:pkg` means `.` or `pkg` directories
 - Enhanced for loop (`:`) cannot iterate over a Map (Map does not implement `Iterable` interface)
+- Don't forget that the compiler has an "Unreachable Code" check.
+- To override the `.equals()` method, it must take have obj parameter `equals(Object obj)` not `equals(SomethingElse obj)`
+- You can NOT use keywords (ex. for, break, int) as labels!
