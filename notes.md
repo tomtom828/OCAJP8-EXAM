@@ -9,6 +9,7 @@
   - Sizes of decimals:
     - float = 32 bits ... suffix `f` or `F`
     - double = 64 bits = approx ±1.79769313486231570E+308 ... suffix `d` or `D`
+    - This will NOT work `float f = 4.3;`, it has to be explictly `float f = 4.3f;` or `float f = (float) 4.3;`
   - Note that `Char` can store integers, ex. `int i = 5` or `char c = '5'` are valid (but different numbers)
 * Default Initialization:
   - byte: 0, short: 0, int: 0, long: 0L, float: 0.0f, double: 0.0, boolean: false, char: \u0000 
@@ -21,7 +22,8 @@
   - For the `Boolean()`, passing in `Boolean("true")` (or any case-insenstive "tRUE") gives `true`, otherwise you get `false`, so `Boolean("Ham Sandwich")` is `false`
   - The default values in this arr are null, not false `Boolean[] arr = new Boolean[1];` (they are object references)
   - Define new `Integer()` as `1` or `"1"`
-  - `Integer() == Integer()` is NOT same as `Integer().equals()` ... same rules as Strings, use `.equals` to compare by value and `==` to check if it's the same object
+  - `Integer(1) == Integer(1)` is NOT same as `Integer().equals()` ... same rules as Strings, use `.equals` to compare by value and `==` to check if it's the same object
+    - Note that `Integer(1)` and `Integer("1")` are both valid syntax
   - BUT WAIT... Don't forget that weird work issue where if the int is < 127, then `new Integer(127) == new Integer(127)` (same for > -128) ... but then `new Integer(128) != new Integer(128)`
   - `Double()` can take in a number like `10.0` or `10` or a String like `"10"` or even a char (since that can be converted to `int` value... ex. `'a'` = `97`)
 * Review rules on casting between different numbers
@@ -31,10 +33,15 @@
   - `int` can NOT be assigned to `byte` without explicit casting (unless, of course, u write it like this `byte b = 127` AND the number is small enough to be a byte... ex `byte b = 300` is NOT ok, this give compilation error)
   - `int` can NOT be assigned to `short` without explicit casting (unless, of course, u write it like  `short s = 32767` )
 * Decimal v. Binary v. Octal v. Hexa
-  - These can be `int` or `long` values
+  - These can ONLY be integer values (i.e. `byte` through `long`) and NOT floating point
   - Binary start with `0b`. Example, `0b1010` is 10 decimal value (1x2^3 + 0x2^2 + 1x2^1 + ...)
   - Octal starts with `0`. Example, `012` is 10 decimal value (1x8^1 + 2x8^0)
   - Hexadecimal starts with `0x`. Example, `0xa` is 10 decimal value (highest letter is F/f, can be CAPS or lowercase)
+* Scientific Notation:
+  - Yes, `e-3;` notation is allowed, ex `double d = 1e-3;` is OK
+  - Note that float needs the `f`, so `float f = 1e-3f;` is also OK
+  - Go crazy with the underscores, just dont touch the edges, the `E`, the `e-`, the `e+`, or the `.` decimal
+    - This is OK `float f = 1__0.0__0E-0_1_0f;`
 * Error vs. Infinity
   - Float division will give +/- Infinity (only if you divide by `0.0`)
   - Int division will give `ArithmeticException`  (i.e. if you divide by `0`)
@@ -45,18 +52,28 @@
 - Always double check `switch` case values... Trick questions like  `int score = 60;switch (score); case score < 70:`. This is NOT ok b/c score is `int` but score < 70 is  `boolean`
 - The `switch` condition can NOT be `boolean`, `long`, or `double` or `float`
 - The `switch` condition CAN be `String`, `char`, `int`, `short`, `byte`, the respective wrapper classes, or `enum` 
+  - Careful with the wrapper classes, even if they are `final`, their references are final but values may not... likely wont be a valid case... so, using `ref` to a wrapper is not OK.. but `new Integer(1)` in the case is OK
 - The `switch` requires a constant condition (ex. `case args[0]` is not ok since it can change)
 - The `break` statement breaks out of the closest LOOP/SWITCH (or ANY labeled STATEMENT within the scope)
 - The `continue` statement basically jumps to the bottom of the LOOP, starting with the next iteration (or continues to labeled LOOP)
 
 
 #### Strings:
+- Yes, the `StringBuilder` IS MUTABLE!!!
+- And the `String` is IMMUTABLE
 - `substring(int beginIndex, int endIndex)` is used to extract the substring. The substring begins at "beginIndex" and extends to "endIndex - 1". 
 - `substring(int beginIndex)` is from the start position all the way to the last position
 - Yes, the `.toString` method works the same in `String` and `Stringbuilder` (shows the string, not the class@hashcode)
 - StringBuilder class does NOT override `equals(Object)` method!!!
 - Don't forget that Strings are immutable... common issue: `str1.trim();` will not change str1, need to do `str1 = str1.trim();`
 - StringBuilder and String are both `final` classes
+- You have to pass a string value or char array to make a `new String()`, i.e. `new String(1)` is NOT valid
+  - You can also pass a char array, ex `new String(new char[]{'a','c','e'});` is OK
+  - Booleans are also NOT ok, `new String(true)` is NOT work
+- Using `String str = new String();` gives back an empty string (i.e. `""`)
+- Yes, the expression `String str = null; (str + " hi");` will give `"null hi"` 
+- The `lastIndexOf(String str)` searchs backwards from the end
+  - The `lastIndexOf(String str, int i)` searchs backwards from the end starting from the ith position (i is from left)
 
 
 #### Arrays:
@@ -111,10 +128,15 @@
 - An `abstract` method has no implemenation (ex. `void doSomething();`)
 - Yes, interfaces can have `static` methods. BUT they cannot be inherited. This means that they can only be called using the full qualified name (ex. `MyInterface.myStaticMethod()` and NOT called from the object that implements it
 - You can NOT narrow accesibility of interface methods, by default `void yo();` is public in an interface, therefore in the class implementation, it must be `public`
+- Classes cannot `extends` an interface, they must `implements` them
+- Interfaces cannot `implements` other interfaces!!!
+- Classes that implement interfaces must make all the members that come from the interface `public`
 
 
 #### Methods/Fields
 - Be careful not to confuse Override with Overload!!!
+  - Override must have all the same input/output parameters
+  - Overload may or may not have same output parameter but the input params MUST be different
 - Only 1 Variable Arity (`vararg...`) is allowed per parameter list, and it must be the LAST parameter in the method.
 - Vararg `...` must be attached to type, not the variable name. Ex `String... args` is OK and `String args...` is not.
 - Methods must have different signatures (i.e. input types) to be overloaded, the same inputs and a different output are not OK.
@@ -146,24 +168,27 @@ These specify certain aspects that are not related to accessibity.
 - Check exceptions are those which are not Error or RunTimeException (or their subclasses)
 - Anything that explicitly `throws` an Exception requires a try / catch block
 - The `try` block is only enough if the class it's inside of also `throws` the same checked exception (or its superclass), otherwise we, must have a `catch` for the specific checked exception
-- There is no `ArrayIndexException`, that is FAKE... The correct one is `IndexOutOfBoundsException`
+- There is no `ArrayIndexException`, that is FAKE... The correct one is `ArrayIndexOutOfBoundsException`
 - Exceptions in `catch` blocks need to be handled in order... ex. `catch(FileNotFoundException){}` needs to come before `catch(IOException){}` since it extends the IOExpection
 - All the `catch(){}` must come before the `finally{}`
 - Something like `catch(FileNotFoundException | IOException e)` is NOT ok if the 2 exceptions are sub / superclasses (as is the case in this example)
 - If a super class / interface method `throws` a checked exception, then the overriding method of sub class can NOT declare to throw the super class of the exception thrown by super class / interface 
 - Yes, `main()` methods is allowed to `throws Exception` (or any other expection, ex. IOException)
 - The `IOException` must be imported from `java.io.*;`
+- The `IndexOutOfBoundsException` is the superclass of `ArrayIndexOutOfBoundsException`
 
 
 #### Garbage Collector:
-  - You can NOT "force" the JVM to run the Garbage Collector
-  - But can "request" it to MAYBE get called using either: `System.gc();` or `Runtime.getRuntime().gc();`
+- You can NOT "force" the JVM to run the Garbage Collector
+- But can "request" it to MAYBE get called using either: `System.gc();` or `Runtime.getRuntime().gc();`
+- An object can still be garbage collected, even if it has references. This can happen it the other object that refers to it is also eligible for garbage collection.
 
 
 #### Lamdba Functions
 - If using blocks (i.e. `{}`) then must have a `return` statement.
 - Method to call on predicate function is `.test()`
 - Be careful with `Predicate` vs `Predicate<String>` (or other types), the generic `Predicate` will assume type is `Object` so methods like `.length()` or `.size()` may not be useable
+- A functional interface has only 1 abstract method, and this method is different from any abstract forms of methods that already belong to the Object class 
 
 
 #### Time/Date:
@@ -187,12 +212,20 @@ These specify certain aspects that are not related to accessibity.
   - `DDD` is DAY OF YEAR, 3 digit max (ex. Dec 31th is 365th day (or 366th if leap year))
   - `dd` is day of month
   - `yy` is year (2 digit) and `yyyy` is year (4 digit). Note that `uu` and `uuuu` also work.
+  - But well, `SSS` is the milliseconds
+  - And well, `ss` is the seconds
 - Methods like `getMonth()` (singular) relate to LocalDate or LocalDateTime and `getMonths()` (plural) is for a `Period`
 - Printing the `LocalDate` will be in format `yyyy-MM-dd`
 - The LocalTime has `LocalTime.of(int hour, int minute, int second, int nanoOfSecond)` as most params and `LocalTime.of(int hour, int minute)` as least params
 - The LocalTime prints as `23:01:15` or `HH:mm:ss` format
 - Note that `11:01:15 pm` is `.format(DateTimeFormatter.ofPattern("HH:mm:ss a")` or `("hh:mm:ss a")` pattern
 - Use `"hh:mm:ss.SSS"` for milliseconds (max of 9 S's)
+- The `Period` class does NOT implement `Comparable`, the others do
+- Note that, unless seconds are specified, `LocalTime` will print `HH:mm` format
+  - To get `HH:mm:ss` just `.pluseconds(0)` to get `11:11:00` for example
+- The default `LocalDateTime` looks like this `2019-02-19T13:15:10.999999999` unless, of course, you omit the seconds and milliseconds
+- Be sure to import the `DateTimeFormatter` from `java.time.format.*`
+- Note that it IS OK to only format just the date or just the time portions of the `LocalDateTime`
 
 
 #### Misc:
@@ -214,3 +247,11 @@ These specify certain aspects that are not related to accessibity.
 - Don't forget that the compiler has an "Unreachable Code" check.
 - To override the `.equals()` method, it must take have obj parameter `equals(Object obj)` not `equals(SomethingElse obj)`
 - You can NOT use keywords (ex. for, break, int) as labels!
+- Only Local variables MUST be intialized, feilds get the default values.
+- Declaration statements can NOT be labeled, ex `label: int i = 1;` will not compile
+- For modulus (`%`), answer will always refer to the left side to determine if positive or negative
+  - Ex. `-7 % 2 < 0` and `7 % -2 >0` and `-7 % -2 > 0`
+  - Note that `%` by zero gives `ArithmeticException` (/ by 0)
+  - Mod by 1 (i.e. `%1` will ALWAYS give `0`, there is no "-0")
+- Yes, you can have `final` as part of main(), ex. `final public static void main(String[] args)` is OK.
+- You can access `private` fields from within a class, even in the `main()` as long as the `main` is inside the class
