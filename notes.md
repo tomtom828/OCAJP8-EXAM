@@ -52,19 +52,21 @@
 - Always double check `switch` case values... Trick questions like  `int score = 60;switch (score); case score < 70:`. This is NOT ok b/c score is `int` but score < 70 is  `boolean`
 - The `switch` condition can NOT be `boolean`, `long`, or `double` or `float`
 - The `switch` condition CAN be `String`, `char`, `int`, `short`, `byte`, the respective wrapper classes, or `enum` 
-  - Careful with the wrapper classes, even if they are `final`, their references are final but values may not... likely wont be a valid case... so, using `ref` to a wrapper is not OK.. but `new Integer(1)` in the case is OK
-- The `switch` requires a constant condition (ex. `case args[0]` is not ok since it can change)
+  - Careful with the wrapper classes, even if they are `final`, their references are final but values may not... likely wont be a valid case... so, using `ref` to a wrapper is not OK.. but even `new Integer(1)` in the case is NOT OK
+- The `switch` requires a constant condition (ex. `case args[0]:` is NOT ok since it can change)
 - The `break` statement breaks out of the closest LOOP/SWITCH (or ANY labeled STATEMENT within the scope)
 - The `continue` statement basically jumps to the bottom of the LOOP, starting with the next iteration (or continues to labeled LOOP)
+  - `continue` can only be used with loops
+- Labeled statments cannot be declarations and must wrap the thing that "breaks" out of them.
 
 
 #### Strings:
 - Yes, the `StringBuilder` IS MUTABLE!!!
 - And the `String` is IMMUTABLE
+- StringBuilder class does NOT override `equals(Object)` method!!!
 - `substring(int beginIndex, int endIndex)` is used to extract the substring. The substring begins at "beginIndex" and extends to "endIndex - 1". 
 - `substring(int beginIndex)` is from the start position all the way to the last position
 - Yes, the `.toString` method works the same in `String` and `Stringbuilder` (shows the string, not the class@hashcode)
-- StringBuilder class does NOT override `equals(Object)` method!!!
 - Don't forget that Strings are immutable... common issue: `str1.trim();` will not change str1, need to do `str1 = str1.trim();`
 - StringBuilder and String are both `final` classes
 - You have to pass a string value or char array to make a `new String()`, i.e. `new String(1)` is NOT valid
@@ -114,6 +116,7 @@
 - Without `class Vehicle extends Car`, we will get a compilation error for `Vehicle obj = new Car();` ... and not an expection like classCastExpection
 - A constructor should have `super()` or `this()`  but not both
 - Same as interfaces, inherited methods / fields cannot have their accessibility narrowed.
+- Note that `interface` and `class` accessibility modifiers can only be `public` or `package-private` (i.e. nothing given). Do NOT use private or protected.
 
 
 
@@ -255,3 +258,5 @@ These specify certain aspects that are not related to accessibity.
   - Mod by 1 (i.e. `%1` will ALWAYS give `0`, there is no "-0")
 - Yes, you can have `final` as part of main(), ex. `final public static void main(String[] args)` is OK.
 - You can access `private` fields from within a class, even in the `main()` as long as the `main` is inside the class
+- The order of keywords for a static import must be `import static ...`
+- ALWAYS ALWAYS ALWAYS Evaluate Left-Hand Operand First (i.e. left side of `=` or `==` is first)
